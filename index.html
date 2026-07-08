@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mis Finanzas</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <!-- LOGIN -->
+
+    <div id="loginContainer" class="login">
+
+        <img src="logo.jpg" class="logo">
+
+        <h1>
+
+            Mis Finanzas
+
+        </h1>
+
+        <p>
+
+            Controla tus gastos de forma sencilla
+
+        </p>
+
+        <label>
+
+            Usuario
+
+        </label>
+
+        <input id="usuario" type="text">
+
+        <label>
+
+            Contraseña
+
+        </label>
+
+        <input id="password" type="password">
+
+        <button id="btnLogin" onclick="login()">
+
+            Ingresar
+
+        </button>
+
+    </div>
+
+    <!-- APLICACIÓN -->
+
+    <div id="app" class="hidden">
+
+        <header>
+
+            <div>
+
+                <h1>
+
+                    💰 Mis Finanzas
+
+                </h1>
+
+                <p id="bienvenida">
+
+                </p>
+
+            </div>
+
+            <div>
+
+                <span style="display:none" id="reloj">
+
+                </span>
+
+                <button onclick="logout()">
+
+                    Cerrar sesión
+
+                </button>
+
+            </div>
+
+        </header>
+
+        <!-- DASHBOARD -->
+
+        <section class="dashboard">
+
+            <div class="card ingreso">
+
+                <h3>
+
+                    Total Gastado
+
+                </h3>
+
+                <h2 id="totalGastado">
+
+                    Gs. 0
+
+                </h2>
+
+            </div>
+
+            <div class="card gasto">
+
+                <h3>
+
+                    Este Mes
+
+                </h3>
+
+                <h2 id="gastoMes">
+
+                    Gs. 0
+
+                </h2>
+
+            </div>
+
+            <div class="card recurrente">
+
+                <h3>
+
+                    Recurrentes
+
+                </h3>
+
+                <h2 id="totalRecurrentes">
+
+                    0
+
+                </h2>
+
+            </div>
+
+            <div class="card promedio">
+
+                <h3>
+
+                    Promedio
+
+                </h3>
+
+                <h2 id="promedioGastos">
+
+                    Gs. 0
+
+                </h2>
+
+            </div>
+
+        </section>
+
+        <!-- ACCIONES -->
+
+        <section class="acciones">
+
+            <button class="principal" onclick="abrirModal()">
+
+                ➕ Nuevo gasto
+
+            </button>
+
+            <button onclick="mostrarEstadisticas()">
+
+                📊 Estadísticas
+
+            </button>
+
+        </section>
+
+        <!-- BUSCADOR -->
+
+        <section>
+
+            <h2>
+
+                Buscar gastos
+
+            </h2>
+
+            <div class="busqueda">    
+                <input id="buscarNombre" placeholder="Nombre del gasto">
+
+                <select id="buscarCategoria">
+
+                    <option value="">
+
+                        Todas las categorías
+
+                    </option>
+
+                    <option>
+
+                        Alimentación
+
+                    </option>
+
+                    <option>
+
+                        Transporte
+
+                    </option>
+
+                    <option>
+
+                        Vivienda
+
+                    </option>
+
+                    <option>
+
+                        Salud
+
+                    </option>
+
+                    <option>
+
+                        Educación
+
+                    </option>
+
+                    <option>
+
+                        Entretenimiento
+
+                    </option>
+
+                    <option>
+
+                        Servicios
+
+                    </option>
+
+                    <option>
+
+                        Compras
+
+                    </option>
+
+                    <option>
+
+                        Deudas
+
+                    </option>
+
+                    <option>
+
+                        Otros
+
+                    </option>
+
+                </select>
+
+                <button onclick="buscarGastos()">
+
+                    Buscar
+
+                </button>
+
+                <button onclick="mostrarGastos()">
+
+                    Reiniciar
+
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- LISTADO -->
+
+        <section>
+
+            <h2>
+
+                Mis gastos
+
+            </h2>
+
+            <div id="contenedorGastos" class="contenedor">
+
+            </div>
+
+        </section>
+
+        <!-- MODAL -->
+
+        <div id="modal" class="modal hidden">
+
+            <div class="modalContenido">
+
+                <h2>
+
+                    Registrar gasto
+
+                </h2>
+
+                <input type="hidden" id="idGasto">
+
+                <label>
+
+                    Nombre
+
+                </label>
+
+                <input id="nombre">
+
+                <label>
+
+                    Monto
+
+                </label>
+
+                <input id="monto" type="number">
+
+                <label>
+
+                    Categoría
+
+                </label>
+
+                <select id="categoria">
+
+                    <option>
+
+                        Alimentación
+
+                    </option>
+
+                    <option>
+
+                        Transporte
+
+                    </option>
+
+                    <option>
+
+                        Vivienda
+
+                    </option>
+
+                    <option>
+
+                        Salud
+
+                    </option>
+
+                    <option>
+
+                        Educación
+
+                    </option>
+
+                    <option>
+
+                        Entretenimiento
+
+                    </option>
+
+                    <option>
+
+                        Servicios
+
+                    </option>
+
+                    <option>
+
+                        Compras
+
+                    </option>
+
+                    <option>
+
+                        Deudas
+
+                    </option>
+
+                    <option>
+
+                        Otros
+
+                    </option>
+
+                </select>
+
+                <label>
+
+                    Tipo
+
+                </label>
+
+                <select id="tipo" onchange="actualizarFrecuencia()">
+
+                    <option value="Unico">
+
+                        Único
+
+                    </option>
+
+                    <option value="Recurrente">
+
+                        Recurrente
+
+                    </option>
+
+                </select>
+
+                <label>
+
+                    Frecuencia
+
+                </label>
+
+                <select id="frecuencia">
+
+                    <option>
+
+                        Semanal
+
+                    </option>
+
+                    <option>
+
+                        Quincenal
+
+                    </option>
+
+                    <option>
+
+                        Mensual
+
+                    </option>
+
+                    <option>
+
+                        Bimestral
+
+                    </option>
+
+                    <option>
+
+                        Trimestral
+
+                    </option>
+
+                    <option>
+
+                        Semestral
+
+                    </option>
+
+                    <option>
+
+                        Anual
+
+                    </option>
+
+                </select>
+
+                <label>
+
+                    Fecha
+
+                </label>
+
+                <input id="fecha" type="date">
+
+                <label>
+
+                    Observaciones
+
+                </label>
+
+                <textarea id="observaciones">
+
+</textarea>
+
+                <div class="botonera">
+
+                    <button onclick="guardarGasto()">
+
+                        Guardar
+
+                    </button>
+
+                    <button onclick="limpiarFormulario()">
+
+                        Limpiar
+
+                    </button>
+
+                    <button onclick="cerrarModal()">
+
+                        Cancelar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- DETALLE -->
+
+        <div id="detalle" class="modal hidden">
+
+            <div class="modalContenido">
+
+                <h2>
+
+                    Detalle
+
+                </h2>
+
+                <p>
+
+                    <b>Nombre:</b>
+
+                    <span id="detalleNombre">
+
+                    </span>
+
+                </p>
+
+                <p>
+
+                    <b>Monto:</b>
+
+                    <span id="detalleMonto">
+
+                    </span>
+
+                </p>
+
+                <p>
+
+                    <b>Categoría:</b>
+
+                    <span id="detalleCategoria">
+
+                    </span>
+
+                </p>
+
+                <p>
+
+                    <b>Tipo:</b>
+
+                    <span id="detalleTipo">
+
+                    </span>
+
+                </p>
+
+                <p>
+
+                    <b>Frecuencia:</b>
+
+                    <span id="detalleFrecuencia">
+
+                    </span>
+
+                </p>
+
+                <p>
+
+                    <b>Fecha:</b>
+
+                    <span id="detalleFecha">
+
+                    </span>
+
+                </p>
+
+                <p>
+
+                    <b>Observaciones:</b>
+
+                    <span id="detalleObservaciones">
+
+                    </span>
+
+                </p>
+
+                <div class="botonera">
+
+                    <button onclick="editarGasto()">
+
+                        Editar
+
+                    </button>
+
+                    <button onclick="eliminarGasto()">
+
+                        Eliminar
+
+                    </button>
+
+                    <button onclick="cerrarDetalle()">
+
+                        Cerrar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- PANEL ESTADÍSTICAS -->
+
+        <div id="estadisticas" class="modal hidden">
+
+            <div class="modalContenido">
+
+                <h2>
+
+                    Estadísticas
+
+                </h2>
+
+                <p>
+
+                    Categoría con mayor gasto:
+
+                    <b id="categoriaMayor">
+
+                        -
+
+                    </b>
+
+                </p>
+
+                <p>
+
+                    Cantidad de gastos:
+
+                    <b id="cantidadGastos">
+
+                        0
+
+                    </b>
+
+                </p>
+
+                <p>
+
+                    Promedio por gasto:
+
+                    <b id="estadisticaPromedio">
+
+                        Gs. 0
+
+                    </b>
+
+                </p>
+
+                <p>
+
+                    Gastos recurrentes:
+
+                    <b id="estadisticaRecurrentes">
+
+                        0
+
+                    </b>
+
+                </p>
+
+                <div class="botonera">
+
+                    <button onclick="cerrarEstadisticas()">
+
+                        Cerrar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <script src="script.js">
+
+        </script>
+
+</body>
+
+</html>
