@@ -168,7 +168,7 @@
 
         <section class="acciones">
 
-            <button class="principal" onclick="abrirModal()">
+            <button class="principal" onclick="nuevoGasto()">
 
                 ➕ Nuevo gasto
 
@@ -192,7 +192,7 @@
 
             </h2>
 
-            <div class="busqueda">    
+            <div class="busqueda">
                 <input id="buscarNombre" placeholder="Nombre del gasto">
 
                 <select id="buscarCategoria">
@@ -271,7 +271,7 @@
 
                 </button>
 
-                <button onclick="mostrarGastos()">
+                <button onclick="reiniciarBusqueda()">
 
                     Reiniciar
 
@@ -419,57 +419,33 @@
 
                 </select>
 
-                <label>
+                <div id="grupoFrecuencia">
 
-                    Frecuencia
+                    <label>
 
-                </label>
+                        Frecuencia
 
-                <select id="frecuencia">
+                    </label>
 
-                    <option>
+                    <select id="frecuencia">
 
-                        Semanal
+                        <option>Semanal</option>
 
-                    </option>
+                        <option>Quincenal</option>
 
-                    <option>
+                        <option>Mensual</option>
 
-                        Quincenal
+                        <option>Bimestral</option>
 
-                    </option>
+                        <option>Trimestral</option>
 
-                    <option>
+                        <option>Semestral</option>
 
-                        Mensual
+                        <option>Anual</option>
 
-                    </option>
+                    </select>
 
-                    <option>
-
-                        Bimestral
-
-                    </option>
-
-                    <option>
-
-                        Trimestral
-
-                    </option>
-
-                    <option>
-
-                        Semestral
-
-                    </option>
-
-                    <option>
-
-                        Anual
-
-                    </option>
-
-                </select>
+                </div>
 
                 <label>
 
@@ -515,110 +491,125 @@
 
         </div>
 
-        <!-- DETALLE -->
+        <!-- DETALLE tabindex="-1" -->
 
         <div id="detalle" class="modal hidden">
 
-            <div class="modalContenido">
+            <div class="modalContenido detalleCard">
 
-                <h2>
-
-                    Detalle
-
+                <h2 id="detalleTitulo">
+            
+                    💰 Detalle del gasto
+            
                 </h2>
-
-                <p>
-
-                    <b>Nombre:</b>
-
-                    <span id="detalleNombre">
-
+            
+                <div class="detalleFila">
+            
+                    <span class="detalleEtiqueta">
+            
+                        Nombre
+            
                     </span>
-
-                </p>
-
-                <p>
-
-                    <b>Monto:</b>
-
-                    <span id="detalleMonto">
-
-                    </span>
-
-                </p>
-
-                <p>
-
-                    <b>Categoría:</b>
-
-                    <span id="detalleCategoria">
-
-                    </span>
-
-                </p>
-
-                <p>
-
-                    <b>Tipo:</b>
-
-                    <span id="detalleTipo">
-
-                    </span>
-
-                </p>
-
-                <p>
-
-                    <b>Frecuencia:</b>
-
-                    <span id="detalleFrecuencia">
-
-                    </span>
-
-                </p>
-
-                <p>
-
-                    <b>Fecha:</b>
-
-                    <span id="detalleFecha">
-
-                    </span>
-
-                </p>
-
-                <p>
-
-                    <b>Observaciones:</b>
-
-                    <span id="detalleObservaciones">
-
-                    </span>
-
-                </p>
-
-                <div class="botonera">
-
-                    <button onclick="editarGasto()">
-
-                        Editar
-
-                    </button>
-
-                    <button onclick="eliminarGasto()">
-
-                        Eliminar
-
-                    </button>
-
-                    <button onclick="cerrarDetalle()">
-
-                        Cerrar
-
-                    </button>
-
+            
+                    <span id="detalleNombre"></span>
+            
                 </div>
-
+            
+                <div class="detalleFila">
+            
+                    <span class="detalleEtiqueta">
+            
+                        Monto
+            
+                    </span>
+            
+                    <span id="detalleMonto" class="detalleMonto"></span>
+            
+                </div>
+            
+                <div class="detalleFila">
+            
+                    <span class="detalleEtiqueta">
+            
+                        Categoría
+            
+                    </span>
+            
+                    <span id="detalleCategoria"></span>
+            
+                </div>
+            
+                <div class="detalleFila">
+            
+                    <span class="detalleEtiqueta">
+            
+                        Tipo
+            
+                    </span>
+            
+                    <span id="detalleTipo"></span>
+            
+                </div>
+            
+                <div class="detalleFila">
+            
+                    <span class="detalleEtiqueta">
+            
+                        Frecuencia
+            
+                    </span>
+            
+                    <span id="detalleFrecuencia"></span>
+            
+                </div>
+            
+                <div class="detalleFila">
+            
+                    <span class="detalleEtiqueta">
+            
+                        Fecha
+            
+                    </span>
+            
+                    <span id="detalleFecha"></span>
+            
+                </div>
+            
+                <div class="detalleObservaciones">
+            
+                    <div class="detalleEtiqueta">
+            
+                        Observaciones
+            
+                    </div>
+            
+                    <div id="detalleObservaciones"></div>
+            
+                </div>
+            
+                <div class="botonera">
+            
+                    <button onclick="editarGasto()">
+            
+                        ✏️ Editar
+            
+                    </button>
+            
+                    <button class="btnEliminar"
+                            onclick="eliminarGasto()">
+            
+                        🗑 Eliminar
+            
+                    </button>
+            
+                    <button onclick="cerrarDetalle()">
+            
+                        Cerrar
+            
+                    </button>
+            
+                </div>
+            
             </div>
 
         </div>
@@ -634,6 +625,10 @@
                     Estadísticas
 
                 </h2>
+
+                <canvas id="graficoCategorias" width="300" height="300">
+
+                </canvas>
 
                 <p>
 

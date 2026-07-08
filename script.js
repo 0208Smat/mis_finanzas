@@ -5,7 +5,7 @@
 let usuarioActual = "";
 
 let gastos =
-JSON.parse(localStorage.getItem("gastos")) || [];
+    JSON.parse(localStorage.getItem("gastos")) || [];
 
 let gastoSeleccionado = null;
 
@@ -14,25 +14,25 @@ let gastoSeleccionado = null;
 // LOGIN
 // =======================================
 
-function login(){
+function login() {
 
     const usuario =
-    document.getElementById("usuario").value.trim();
+        document.getElementById("usuario").value.trim();
 
     const password =
-    document.getElementById("password").value;
+        document.getElementById("password").value;
 
-    if(usuario === "admin" && password === "123"){
-
-        usuarioActual = usuario;
-
-    }
-    else if(usuario === "usuario" && password === "123"){
+    if (usuario === "admin" && password === "123") {
 
         usuarioActual = usuario;
 
     }
-    else{
+    else if (usuario === "usuario" && password === "123") {
+
+        usuarioActual = usuario;
+
+    }
+    else {
 
         alert("Credenciales incorrectas");
 
@@ -41,24 +41,23 @@ function login(){
     }
 
     document
-    .getElementById("loginContainer")
-    .classList.add("hidden");
+        .getElementById("loginContainer")
+        .classList.add("hidden");
 
     document
-    .getElementById("app")
-    .classList.remove("hidden");
+        .getElementById("app")
+        .classList.remove("hidden");
 
     document
-    .getElementById("bienvenida")
-    .innerHTML =
-    "Bienvenido <b>" + usuarioActual + "</b>";
-
-    iniciarReloj();
+        .getElementById("bienvenida")
+        .innerHTML =
+        "Bienvenido <b>" + usuarioActual + "</b>";
 
     actualizarDashboard();
 
     mostrarGastos();
 
+    actualizarFrecuencia();
 }
 
 
@@ -66,9 +65,9 @@ function login(){
 // LOGOUT
 // =======================================
 
-function logout(){
+function logout() {
 
-    if(confirm("¿Cerrar sesión?")){
+    if (confirm("¿Cerrar sesión?")) {
 
         location.reload();
 
@@ -81,43 +80,31 @@ function logout(){
 // RELOJ
 // =======================================
 
-function iniciarReloj(){
 
-    setInterval(()=>{
-
-        document
-        .getElementById("reloj")
-        .innerHTML =
-        new Date().toLocaleString();
-
-    },1000);
-
-}
 
 
 // =======================================
 // MODAL CONTROL
 // =======================================
 
-function abrirModal(){
+function abrirModal() {
 
     document
-    .getElementById("modal")
-    .classList
-    .remove("hidden");
+        .getElementById("modal")
+        .classList
+        .remove("hidden");
 
     document
-    .getElementById("nombre")
-    .focus();
-
+        .getElementById("nombre")
+        .focus();
 }
 
-function cerrarModal(){
+function cerrarModal() {
 
     document
-    .getElementById("modal")
-    .classList
-    .add("hidden");
+        .getElementById("modal")
+        .classList
+        .add("hidden");
 
     limpiarFormulario();
 
@@ -128,7 +115,7 @@ function cerrarModal(){
 // LIMPIAR FORM
 // =======================================
 
-function limpiarFormulario(){
+function limpiarFormulario() {
 
     document.getElementById("idGasto").value = "";
 
@@ -140,9 +127,13 @@ function limpiarFormulario(){
 
     document.getElementById("tipo").value = "Unico";
 
-    document.getElementById("frecuencia").selectedIndex = 0;
+    document
+        .getElementById("frecuencia").selectedIndex = 0;
 
-    document.getElementById("fecha").value = "";
+    actualizarFrecuencia();
+
+    document.getElementById("fecha").value =
+        obtenerFechaHoy();
 
     document.getElementById("observaciones").value = "";
 
@@ -153,34 +144,37 @@ function limpiarFormulario(){
 // GUARDAR GASTO (CREATE / UPDATE)
 // =======================================
 
-function guardarGasto(){
+function guardarGasto() {
 
     const id =
-    document.getElementById("idGasto").value;
+        document.getElementById("idGasto").value;
+
+    var esNuevo = id == "";
 
     const nombre =
-    document.getElementById("nombre").value.trim();
+        document.getElementById("nombre").value.trim();
 
     const monto =
-    parseFloat(document.getElementById("monto").value);
+        parseFloat(document.getElementById("monto").value);
 
     const categoria =
-    document.getElementById("categoria").value;
+        document.getElementById("categoria").value;
 
     const tipo =
-    document.getElementById("tipo").value;
+        document.getElementById("tipo").value;
 
     const frecuencia =
-    document.getElementById("frecuencia").value;
+        document.getElementById("tipo").value === "Recurrente"
+            ? document.getElementById("frecuencia").value : "";
 
     const fecha =
-    document.getElementById("fecha").value;
+        document.getElementById("fecha").value;
 
     const observaciones =
-    document.getElementById("observaciones").value;
+        document.getElementById("observaciones").value;
 
 
-    if(nombre === "" || isNaN(monto)){
+    if (nombre === "" || isNaN(monto)) {
 
         alert("Complete nombre y monto");
 
@@ -193,10 +187,10 @@ function guardarGasto(){
     // EDITAR
     // =========================
 
-    if(id !== ""){
+    if (!esNuevo) {
 
         const gasto =
-        gastos.find(g => g.id == id);
+            gastos.find(g => g.id == id);
 
         gasto.nombre = nombre;
 
@@ -220,7 +214,7 @@ function guardarGasto(){
     // NUEVO
     // =========================
 
-    else{
+    else {
 
         gastos.push({
 
@@ -246,12 +240,12 @@ function guardarGasto(){
         JSON.stringify(gastos)
     );
 
-
     cerrarModal();
 
     actualizarDashboard();
 
-    mostrarGastos();
+    //mostrarGastos();
+    buscarGastos();
 
 }
 
@@ -260,7 +254,7 @@ function guardarGasto(){
 // DASHBOARD
 // =======================================
 
-function actualizarDashboard(){
+function actualizarDashboard() {
 
     let total = 0;
 
@@ -272,7 +266,7 @@ function actualizarDashboard(){
 
 
     const mesActual =
-    new Date().getMonth();
+        new Date().getMonth();
 
 
     gastos.forEach(g => {
@@ -281,13 +275,13 @@ function actualizarDashboard(){
 
         suma += g.monto;
 
-        if(g.tipo === "Recurrente"){
+        if (g.tipo === "Recurrente") {
 
             recurrentes++;
 
         }
 
-        if(new Date(g.fecha).getMonth() === mesActual){
+        if (new Date(g.fecha).getMonth() === mesActual) {
 
             mes += g.monto;
 
@@ -297,29 +291,29 @@ function actualizarDashboard(){
 
 
     document
-    .getElementById("totalGastado")
-    .innerHTML =
-    "Gs. " + total;
+        .getElementById("totalGastado")
+        .innerHTML =
+        "Gs. " + formatoPYG(total);
 
 
     document
-    .getElementById("gastoMes")
-    .innerHTML =
-    "Gs. " + mes;
+        .getElementById("gastoMes")
+        .innerHTML =
+        "Gs. " + formatoPYG(mes);
 
 
     document
-    .getElementById("totalRecurrentes")
-    .innerHTML =
-    recurrentes;
+        .getElementById("totalRecurrentes")
+        .innerHTML =
+        recurrentes;
 
 
     document
-    .getElementById("promedioGastos")
-    .innerHTML =
-    gastos.length > 0
-    ? "Gs. " + (suma / gastos.length).toFixed(0)
-    : "Gs. 0";
+        .getElementById("promedioGastos")
+        .innerHTML =
+        gastos.length > 0
+            ? "Gs. " + formatoPYG((suma / gastos.length).toFixed(0))
+            : "Gs. 0";
 
 }
 
@@ -327,28 +321,28 @@ function actualizarDashboard(){
 // MOSTRAR GASTOS
 // =======================================
 
-function mostrarGastos(lista = gastos){
+function mostrarGastos(lista = gastos) {
 
     const contenedor =
-    document.getElementById("contenedorGastos");
+        document.getElementById("contenedorGastos");
 
     const inputNombre =
-    document.getElementById("buscarNombre");
+        document.getElementById("buscarNombre");
 
     const selectCategoria =
-    document.getElementById("buscarCategoria");
+        document.getElementById("buscarCategoria");
 
     contenedor.innerHTML = "";
 
-    inputNombre.value="";
+    /*inputNombre.value = "";
 
-    selectCategoria.selectedIndex = 0;
+    selectCategoria.selectedIndex = 0;*/
 
 
-    if(lista.length === 0){
+    if (lista.length === 0) {
 
         contenedor.innerHTML =
-        "<p>No hay gastos registrados</p>";
+            "<p>No hay gastos registrados</p>";
 
         return;
 
@@ -365,7 +359,7 @@ function mostrarGastos(lista = gastos){
 
             <h3>${g.nombre}</h3>
 
-            <p>💰 Gs. ${g.monto}</p>
+            <p>💰 Gs. ${formatoPYG(g.monto)}</p>
 
             <p>📂 ${g.categoria}</p>
 
@@ -377,6 +371,8 @@ function mostrarGastos(lista = gastos){
 
     });
 
+    actualizarFrecuencia();
+
 }
 
 
@@ -384,26 +380,37 @@ function mostrarGastos(lista = gastos){
 // BUSCADOR
 // =======================================
 
-function buscarGastos(){
+function buscarGastos() {
 
     const nombre =
-    document.getElementById("buscarNombre")
-    .value.toLowerCase().trim();
+        document
+            .getElementById("buscarNombre")
+            .value
+            .toLowerCase()
+            .trim();
+
 
     const categoria =
-    document.getElementById("buscarCategoria")
-    .value;
+        document
+            .getElementById("buscarCategoria")
+            .value;
 
 
     const resultado = gastos.filter(g => {
 
-        const matchNombre =
-        g.nombre.toLowerCase().includes(nombre);
+        const coincideNombre =
+            g.nombre
+                .toLowerCase()
+                .includes(nombre);
 
-        const matchCategoria =
-        categoria === "" || g.categoria === categoria;
 
-        return matchNombre && matchCategoria;
+        const coincideCategoria =
+            categoria === "" ||
+            g.categoria === categoria;
+
+
+        return coincideNombre &&
+            coincideCategoria;
 
     });
 
@@ -417,41 +424,61 @@ function buscarGastos(){
 // DETALLE
 // =======================================
 
-function verDetalle(id){
+function verDetalle(id) {
 
     gastoSeleccionado =
-    gastos.find(g => g.id === id);
+        gastos.find(g => g.id === id);
 
 
-    if(!gastoSeleccionado) return;
+    if (!gastoSeleccionado) return;
 
+    const modalDetalle =
+        document.getElementById("detalle");
 
-    document
-    .getElementById("detalle")
-    .classList
-    .remove("hidden");
+    modalDetalle
+        .classList
+        .remove("hidden");
+
+    modalDetalle.focus();
+
+    modalDetalle.scrollIntoView({
+
+        behavior: "smooth",
+
+        block: "center"
+
+    });
 
 
     document.getElementById("detalleNombre").innerText =
-    gastoSeleccionado.nombre;
+        gastoSeleccionado.nombre;
 
-    document.getElementById("detalleMonto").innerText =
-    "Gs. " + gastoSeleccionado.monto;
+    document.getElementById("detalleMonto").innerHTML =
+        "Gs. " + formatoPYG(gastoSeleccionado.monto);
 
-    document.getElementById("detalleCategoria").innerText =
-    gastoSeleccionado.categoria;
+    document.getElementById("detalleCategoria").innerHTML =
 
-    document.getElementById("detalleTipo").innerText =
-    gastoSeleccionado.tipo;
+        '<span class="categoriaChip">' +
 
-    document.getElementById("detalleFrecuencia").innerText =
-    gastoSeleccionado.frecuencia;
+        gastoSeleccionado.categoria +
+
+        '</span>';
+
+    document.getElementById("detalleTipo").innerHTML =
+        gastoSeleccionado.tipo === "Recurrente" ?
+            '<span class="badgeRecurrente">🔁 Recurrente</span>'
+            :
+            '<span class="badgeUnico">📌 Único</span>';
+
+    document.getElementById("detalleFrecuencia").innerHTML =
+        gastoSeleccionado.tipo === "Recurrente"
+            ? gastoSeleccionado.frecuencia : "-";
 
     document.getElementById("detalleFecha").innerText =
-    gastoSeleccionado.fecha;
+        gastoSeleccionado.fecha;
 
     document.getElementById("detalleObservaciones").innerText =
-    gastoSeleccionado.observaciones;
+        gastoSeleccionado.observaciones;
 
 }
 
@@ -460,12 +487,14 @@ function verDetalle(id){
 // CERRAR DETALLE
 // =======================================
 
-function cerrarDetalle(){
+function cerrarDetalle() {
 
     document
-    .getElementById("detalle")
-    .classList
-    .add("hidden");
+        .getElementById("detalle")
+        .classList
+        .add("hidden");
+
+    document.body.style.overflow = "auto";
 
 }
 
@@ -474,37 +503,49 @@ function cerrarDetalle(){
 // EDITAR DESDE DETALLE
 // =======================================
 
-function editarGasto(){
+function editarGasto() {
 
-    if(!gastoSeleccionado) return;
+    if (!gastoSeleccionado)
+        return;
 
 
     document.getElementById("idGasto").value =
-    gastoSeleccionado.id;
+        gastoSeleccionado.id;
+
 
     document.getElementById("nombre").value =
-    gastoSeleccionado.nombre;
+        gastoSeleccionado.nombre;
+
 
     document.getElementById("monto").value =
-    gastoSeleccionado.monto;
+        gastoSeleccionado.monto;
+
 
     document.getElementById("categoria").value =
-    gastoSeleccionado.categoria;
+        gastoSeleccionado.categoria;
+
 
     document.getElementById("tipo").value =
-    gastoSeleccionado.tipo;
+        gastoSeleccionado.tipo;
+
+
+    actualizarFrecuencia();
+
 
     document.getElementById("frecuencia").value =
-    gastoSeleccionado.frecuencia;
+        gastoSeleccionado.frecuencia || "";
+
 
     document.getElementById("fecha").value =
-    gastoSeleccionado.fecha;
+        gastoSeleccionado.fecha;
+
 
     document.getElementById("observaciones").value =
-    gastoSeleccionado.observaciones;
+        gastoSeleccionado.observaciones;
 
 
     cerrarDetalle();
+
 
     abrirModal();
 
@@ -515,12 +556,12 @@ function editarGasto(){
 // ELIMINAR GASTO
 // =======================================
 
-function eliminarGasto(){
+function eliminarGasto() {
 
-    if(!gastoSeleccionado) return;
+    if (!gastoSeleccionado) return;
 
 
-    if(!confirm("¿Eliminar este gasto?")) return;
+    if (!confirm("¿Eliminar este gasto?")) return;
 
 
     gastos = gastos.filter(
@@ -541,7 +582,8 @@ function eliminarGasto(){
 
     actualizarDashboard();
 
-    mostrarGastos();
+    //mostrarGastos();
+    buscarGastos();
 
     alert("Gasto eliminado");
 
@@ -552,7 +594,7 @@ function eliminarGasto(){
 // ESTADÍSTICAS
 // =======================================
 
-function mostrarEstadisticas(){
+function mostrarEstadisticas() {
 
     let categorias = {};
 
@@ -564,7 +606,7 @@ function mostrarEstadisticas(){
         total += g.monto;
 
 
-        if(!categorias[g.categoria]){
+        if (!categorias[g.categoria]) {
 
             categorias[g.categoria] = 0;
 
@@ -581,9 +623,9 @@ function mostrarEstadisticas(){
     let max = 0;
 
 
-    for(let c in categorias){
+    for (let c in categorias) {
 
-        if(categorias[c] > max){
+        if (categorias[c] > max) {
 
             max = categorias[c];
 
@@ -595,25 +637,26 @@ function mostrarEstadisticas(){
 
 
     document.getElementById("categoriaMayor").innerText =
-    categoriaMayor;
+        categoriaMayor;
 
     document.getElementById("cantidadGastos").innerText =
-    gastos.length;
+        gastos.length;
 
     document.getElementById("estadisticaPromedio").innerText =
-    gastos.length > 0
-    ? "Gs. " + (total / gastos.length).toFixed(0)
-    : "Gs. 0";
+        gastos.length > 0
+            ? "Gs. " + formatoPYG((total / gastos.length).toFixed(0))
+            : "Gs. 0";
 
     document.getElementById("estadisticaRecurrentes").innerText =
-    gastos.filter(g => g.tipo === "Recurrente").length;
+        gastos.filter(g => g.tipo === "Recurrente").length;
 
 
     document
-    .getElementById("estadisticas")
-    .classList
-    .remove("hidden");
+        .getElementById("estadisticas")
+        .classList
+        .remove("hidden");
 
+    dibujarGrafico(categorias);
 }
 
 
@@ -621,18 +664,174 @@ function mostrarEstadisticas(){
 // CERRAR ESTADISTICAS
 // =======================================
 
-function cerrarEstadisticas(){
+function cerrarEstadisticas() {
 
     document
-    .getElementById("estadisticas")
-    .classList
-    .add("hidden");
+        .getElementById("estadisticas")
+        .classList
+        .add("hidden");
 
 }
 
+function actualizarFrecuencia() {
+
+    const recurrente =
+        document.getElementById("tipo").value === "Recurrente";
+
+    document
+        .getElementById("grupoFrecuencia")
+        .style.display =
+        recurrente
+            ? "block"
+            : "none";
+}
+
+function dibujarGrafico(categorias) {
+
+    const canvas =
+        document.getElementById("graficoCategorias");
+
+    const ctx =
+        canvas.getContext("2d");
+
+    ctx.clearRect(0, 0, 300, 300);
+
+    const colores = [
+
+        "#22c55e",
+        "#3b82f6",
+        "#f59e0b",
+        "#ef4444",
+        "#8b5cf6",
+        "#06b6d4",
+        "#ec4899",
+        "#84cc16",
+        "#f97316",
+        "#14b8a6"
+
+    ];
+
+    const total =
+        Object.values(categorias)
+            .reduce((a, b) => a + b, 0);
+
+    let inicio = 0;
+
+    let i = 0;
+
+    for (const categoria in categorias) {
+
+        const angulo =
+            (categorias[categoria] / total)
+            * Math.PI * 2;
+
+        ctx.beginPath();
+
+        ctx.moveTo(150, 150);
+
+        ctx.arc(
+            150,
+            150,
+            110,
+            inicio,
+            inicio + angulo
+        );
+
+        ctx.closePath();
+
+        ctx.fillStyle =
+            colores[i % colores.length];
+
+        ctx.fill();
+
+        inicio += angulo;
+
+        i++;
+
+    }
+
+}
+
+function obtenerFechaHoy() {
+
+    const hoy = new Date();
+
+    const anio = hoy.getFullYear();
+
+    const mes = String(hoy.getMonth() + 1)
+        .padStart(2, "0");
+
+    const dia = String(hoy.getDate())
+        .padStart(2, "0");
+
+    return `${anio}-${mes}-${dia}`;
+
+}
+
+function formatoPYG(valor) {
+
+    return Number(valor).toLocaleString(
+
+        "es-PY",
+
+        {
+
+            minimumFractionDigits: 0,
+
+            maximumFractionDigits: 2
+
+        }
+
+    );
+
+}
+
+function obtenerFiltrosActuales() {
+
+    return {
+
+        nombre:
+            document.getElementById("buscarNombre").value,
+
+        categoria:
+            document.getElementById("buscarCategoria").value
+
+    };
+
+}
+
+function nuevoGasto() {
+
+    limpiarFormulario();
+
+    document
+        .getElementById("fecha")
+        .value = obtenerFechaHoy();
+
+
+    abrirModal();
+
+}
+
+function reiniciarBusqueda(){
+
+    document
+    .getElementById("buscarNombre")
+    .value = "";
+
+
+    document
+    .getElementById("buscarCategoria")
+    .selectedIndex = 0;
+
+
+    mostrarGastos();
+
+}
 
 // =======================================
 // INICIALIZAR
 // =======================================
 
 mostrarGastos();
+
